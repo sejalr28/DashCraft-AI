@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashcraft AI</title>
+</head>
+<body>
+
+<h1>AI Dashboard Generator</h1>
+
+<textarea id="prompt" placeholder="Describe your dashboard..."></textarea>
+<button onclick="generate()">Generate</button>
+
+<pre id="output"></pre>
+
+<script>
+async function generate() {
+  const prompt = document.getElementById("prompt").value;
+
+  const res = await fetch("/api/claude", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      model: "claude-3-sonnet-20240229",
+      max_tokens: 500,
+      messages: [
+        { role: "user", content: prompt }
+      ]
+    })
+  });
+
+  const data = await res.json();
+
+  document.getElementById("output").innerText =
+    data.content?.[0]?.text || JSON.stringify(data);
+}
+</script>
+
+</body>
+</html>
